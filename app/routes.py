@@ -1,10 +1,16 @@
+import os
+from flask import Flask
 from flask import render_template, url_for, flash, redirect, request
 from flask_login import login_user, current_user, logout_user, login_required
 from .app_factory import db
 from .forms import RegistrationForm, LoginForm, TaskForm
 from .models import User, Task, Department
 
+app = Flask(__name__)
+
 @app.route("/")
+def index():
+    return 'Hello Team'
 @app.route("/home")
 def home():
     return render_template('index.html')
@@ -71,4 +77,10 @@ def new_task():
         flash('Task has been created!', 'success')
         return redirect(url_for('manager_dashboard'))
     return render_template('task_form.html', title='New Task', form=form)
+
+if __name__ == '__main__':
+    db.create_all()
+    host = getenv("API_HOST", "0.0.0.0")
+    port = getenv("API_PORT", "5000")
+    app.run(host=host, port=port)
 
