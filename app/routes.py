@@ -1,8 +1,8 @@
 from flask import render_template, url_for, flash, redirect, request
-from app import app, db
-from app.forms import RegistrationForm, LoginForm, TaskForm
-from app.models import User, Task, Department
 from flask_login import login_user, current_user, logout_user, login_required
+from .app_factory import db
+from .forms import RegistrationForm, LoginForm, TaskForm
+from .models import User, Task, Department
 
 @app.route("/")
 @app.route("/home")
@@ -18,7 +18,7 @@ def register():
         user = User(username=form.username.data, email=form.email.data, password=form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash('Your account has been created!', 'Success')
+        flash('Your account has been created!', 'success')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
@@ -32,7 +32,7 @@ def login():
         if user and user.password == form.password.data:
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirecf(url_for('home'))
+            return redirect(next_page) if next_page else redirect(url_for('home'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', form=form)
@@ -42,24 +42,24 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
-@login_required
 @app.route("/dashboard")
+@login_required
 def dashboard():
     if current_user.is_manager:
         return redirect(url_for('manager_dashboard'))
     tasks = Task.query.filter_by(user_id=current_user.id)
     return render_template('employee_dashboard.html', tasks=tasks)
 
-@login_required
 @app.route("/manager_dashboard")
+@login_required
 def manager_dashboard():
     if not current_user.is_manager:
         return redirect(url_for('dashboard'))
     departments = Department.query.all()
     return render_template('manager_dashboard.html', departments=departments)
 
+@app.route("/task/new", methods=['GET', 'POST'])
 @login_required
-@app.route("tasks/new", methods=['GET', 'POST'])
 def new_task():
     if not current_user.is_manager:
         return redirect(url_for('dashboard'))
@@ -70,4 +70,5 @@ def new_task():
         db.session.commit()
         flash('Task has been created!', 'success')
         return redirect(url_for('manager_dashboard'))
-    return render_template('task_form.html', title='New task', form=form)
+    return render_template('task_form.html', title='New Task', form=form)
+

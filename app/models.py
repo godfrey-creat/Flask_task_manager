@@ -1,10 +1,10 @@
 from datetime import datetime
 from app import db, login_manager
-from flak_login import UserMixin
+from flask_login import UserMixin
 
 @login_manager.user_loader
 def load_user(user_id):
-    return user.query.get(int(user_id))
+    return User.query.get(int(user_id))
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -13,7 +13,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
     is_manager = db.Column(db.Boolean, default=False)
     tasks = db.relationship('Task', backref='assignee', lazy=True)
-    department_id = db.Column(db.Integer, db.ForeignKey('department_id'))
+    department_id = db.Column(db.Integer, db.ForeignKey('department.id'))
 
 class Department(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -23,7 +23,8 @@ class Department(db.Model):
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.Text, nullable= False)
-    due_date = db.Column(db.Datetime, nullable=False, default=datetime.utcnow)
+    description = db.Column(db.Text, nullable=True)
+    due_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     status = db.Column(db.String(20), nullable=False, default='In Progress')
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+

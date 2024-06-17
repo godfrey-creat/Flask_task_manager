@@ -1,3 +1,4 @@
+from .app_factory import create_app, db
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -16,7 +17,7 @@ def create_app():
     migrate.init_app(app, db)
     login_manager.init_app(app)
 
-    with app.app_content():
+    with app.app_context():
         from . import routes, models
 
         db.create_all()
