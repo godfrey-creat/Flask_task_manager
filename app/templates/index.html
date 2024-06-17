@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<h1>Welcome to the company Management System</h1>
+<p>Our comapny take pride in assigning tasks and sign-up/log-in button.</p>
+<a href="{{ url_for('login') }}">Login</a> | <a href="{{ url_for('register') }}">Sign Up</a>
