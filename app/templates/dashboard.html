@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h1>Dashboard</h1>
+{% if current_user.is_manager %}
+    <p>Welcome, Manager!</p>
+    <a href="{{ url_for('manager_dashboard') }}">Go to Manager Dashboard</a>
+{% else %}
+    <p>Welcome, Employee!</p>
+    <a href="{{ url_for('employee_dashboard') }}">Go to Employee Dashboard</a>
+{% endif %}
+{% endblock %}
+

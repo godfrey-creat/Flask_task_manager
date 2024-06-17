@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Manager Dashboard{% endblock %}
+{% block content %}
+<h1>Manager Dashboard</h1>
+<h2>Departments</h2>
+<ul>
+    {% for department in departments %}
+        <li>{{ department.name }}</li>
+    {% endfor %}
+</ul>
+<a href="{{ url_for('new_task') }}">Create New Task</a>
+
+<h2>Manage Employees</h2>
+<ul>
+    {% for department in departments %}
+        <li>
+            <strong>{{ department.name }}</strong>
+            <ul>
+                {% for user in department.users %}
+                    <li>{{ user.username }} - {{ user.email }}</li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+</ul>
+
+<h2>Task Summary</h2>
+<p>Total Tasks: {{ total_tasks }}</p>
+<p>Completed Tasks: {{ completed_tasks }}</p>
+<p>Pending Tasks: {{ pending_tasks }}</p>
+
+{% endblock %}
+

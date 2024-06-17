@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Employee Dashboard{% endblock %}
+{% block content %}
+<h1>Employee Dashboard</h1>
+<h2>Your Tasks</h2>
+<ul>
+    {% for task in tasks %}
+        <li>
+            <strong>{{ task.title }}</strong> - {{ task.status }}
+            <form method="POST" action="{{ url_for('update_task', task_id=task.id) }}">
+                {{ form.hidden_tag() }}
+                <select name="status">
+                    <option value="In Progress" {% if task.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                    <option value="Done" {% if task.status == 'Done' %}selected{% endif %}>Done</option>
+                </select>
+                <input type="submit" value="Update">
+            </form>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}
+
