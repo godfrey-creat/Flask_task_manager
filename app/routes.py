@@ -1,12 +1,28 @@
 import os
 from flask import Flask
 from flask import render_template, url_for, flash, redirect, request
+from flask_login import LoginManager
+from flask_bcrypt import bcrypt
+from flask_bcypt import Bcrypt
+from flask_cors import (CORS, cross_origin)
 from flask_login import login_user, current_user, logout_user, login_required
 from .app_factory import db
 from .forms import RegistrationForm, LoginForm, TaskForm
 from .models import User, Task, Department
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_KEY'] = 'manager_secret_key'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///manager.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+bcrypt = Bcrypt(app)
+login_manager = LoginManager(app)
+
+db.init_app(app)
+
+def create_db():
+    with app.app_context():
+        db.create_all()
+
 
 @app.route("/")
 def index():
