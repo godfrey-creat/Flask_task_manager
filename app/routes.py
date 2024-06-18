@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import os
 from flask import Flask
 from flask import render_template, url_for, flash, redirect, request
